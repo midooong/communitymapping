@@ -124,6 +124,10 @@ if page == "키오스크 데이터 입력":
         st_folium(m, width=700, height=500)
 
 elif page == "키오스크 데이터 분석":
+    plt.rcParams['font.family']="NanumGothic"
+
+    # 마이너스 기호 깨짐 방지
+    plt.rcParams["axes.unicode_minus"] = False
     # 데이터 분석 페이지
     st.title("함께 수집한 키오스크 데이터 분석하기")
 
