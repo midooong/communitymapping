@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>키오스크 커뮤니티 매핑</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, select, button {
+            padding: 10px;
+            font-size: 16px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>키오스크 커뮤니티 매핑</h1>
+    <p>현재 위치를 가져오고, 키오스크 정보를 입력하세요.</p>
+
+    <button id="getLocationBtn">현재 위치 가져오기</button>
+    <p id="location">위도: - / 경도: -</p>
+
+    <form id="kioskForm">
+        <label for="placeName">장소 이름</label>
+        <input type="text" id="placeName" name="placeName" required>
+
+        <label for="kioskHeight">키오스크 최대 높이 (cm)</label>
+        <input type="number" id="kioskHeight" name="kioskHeight" required>
+
+        <label for="languageSupport">외국어 지원</label>
+        <select id="languageSupport" name="languageSupport" required>
+            <option value="none">없음</option>
+            <option value="english">영어</option>
+            <option value="chinese">중국어</option>
+            <option value="japanese">일본어</option>
+            <option value="other">기타 언어</option>
+        </select>
+
+        <button type="button" id="submitBtn">데이터 제출</button>
+    </form>
+
+    <script>
+        let latitude = null;
+        let longitude = null;
+
+        // 현재 위치 가져오기
+        document.getElementById("getLocationBtn").addEventListener("click", () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        latitude = position.coords.latitude;
+                        longitude = position.coords.longitude;
+                        document.getElementById("location").innerText = `위도: ${latitude} / 경도: ${longitude}`;
+                    },
+                    (error) => {
+                        alert("위치 정보를 가져올 수 없습니다: " + error.message);
+                    }
+                );
+            } else {
+                alert("이 브라우저에서는 위치 서비스를 지원하지 않습니다.");
+            }
+        });
+
+        // 데이터 제출
+        document.getElementById("submitBtn").addEventListener("click", () => {
+            const placeName = document.getElementById("placeName").value;
+            const kioskHeight = document.getElementById("kioskHeight").value;
+            const languageSupport = document.getElementById("languageSupport").value;
+
+            if (!latitude || !longitude) {
+                alert("먼저 위치 정보를 가져와야 합니다!");
+                return;
+            }
+
+            const data = {
+                latitude,
+                longitude,
+                placeName,
+                kioskHeight,
+                languageSupport,
+            };
+
+            fetch("YOUR_GOOGLE_APPS_SCRIPT_URL", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+            })
+                .then((response) => response.json())
+                .then((result) => {
+                    if (result.result === "success") {
+                        alert("데이터가 성공적으로 제출되었습니다!");
+                    } else {
+                        alert("데이터 제출에 실패했습니다.");
+                    }
+                })
+                .catch((error) => {
+                    alert("오류가 발생했습니다: " + error.message);
+                });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+streamlit==1.41.1
+gspread==6.1.4
+google-auth==2.37.0
+google-auth-httplib2==0.2.0
+google-auth-oauthlib==1.2.1
+pandas==2.2.3
+numpy==2.2.0
+matplotlib==3.10.0
+pillow==11.0.0
+folium==0.19.2
+streamlit-folium==0.23.2
+python-dateutil==2.9.0.post0
+toml==0.10.2
