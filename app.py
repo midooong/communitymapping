@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # 현재 스크립트 위치
-FONT_PATH = os.path.join(BASE_DIR, "fonts", "NanumGothic.ttf")
+FONT_PATH = os.path.join(BASE_DIR, "NanumGothic.ttf")
 fontprop = fm.FontProperties(fname=FONT_PATH)
 
 # matplotlib 폰트 설정
