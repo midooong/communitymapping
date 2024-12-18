@@ -14,11 +14,7 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 
 # 폰트 파일 경로 설정
-if platform.system() == 'Linux':
-    plt.rcParams['font.family'] = 'NanumGothic'
-else:
-    plt.rcParams['font.family'] = 'Malgun Gothic'
-
+plt.rcParams['font.family'] = 'NanumGothic'
 plt.rcParams['axes.unicode_minus'] = False
 
 # .toml 파일 읽기
