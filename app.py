@@ -143,5 +143,42 @@ elif page == "키오스크 데이터 분석":
             height = patch.get_height() / 2
             ax.text(patch.get_x() + patch.get_width() / 2, height, str(int(count)),
                     ha="center", va="center", fontsize=10, color="black")
+        st.pyplot(fig)
+
+        
+        # 분류별 데이터 수
+        st.subheader("분류별 키오스크 수")
+        category_counts = df["category"].value_counts().astype(int)  # 정수 처리
+        fig, ax = plt.subplots()
+        category_counts.plot(kind="bar", color=["red", "blue", "yellow", "green"], ax=ax)
+        ax.set_title("분류별 키오스크 수")
+        ax.set_xlabel("분류")
+        ax.set_ylabel("키오스크 수")
+        ax.yaxis.set_major_locator(MaxNLocator(integer=True))  # y축 정수 설정
+
+        for i, count in enumerate(category_counts):
+            ax.text(i, count / 2, str(count), ha="center", va="center", fontsize=10, color="white")
 
         st.pyplot(fig)
+
+        # 분류별 데이터 통계 표
+        category_summary = category_counts.reset_index()
+        category_summary.columns = ["분류", "개수"]
+        st.subheader("분류별 데이터 통계")
+        st.table(category_summary)
+
+        # 외국어 지원 여부
+        st.subheader("외국어 지원 여부")
+        language_counts = df["foreign_language_support"].value_counts().astype(int)  # 정수 처리
+        fig, ax = plt.subplots()
+        ax.pie(language_counts, labels=language_counts.index, autopct="%1.1f%%", startangle=90, colors=plt.cm.Paired.colors)
+        ax.set_title("외국어 지원 여부 비율")
+        st.pyplot(fig)
+
+        # 외국어 지원 통계 표
+        language_summary = language_counts.reset_index()
+        language_summary.columns = ["외국어 지원", "개수"]
+        st.subheader("외국어 지원 데이터 통계")
+        st.table(language_summary)
+
+      
