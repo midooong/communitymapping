@@ -13,6 +13,8 @@ import os
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 
+matplotlib.font_manager._rebuild()
+
 FONT_PATH = os.path.abspath("NanumGothic.ttf")  # 절대 경로로 설정
 fontprop = fm.FontProperties(fname=FONT_PATH)
 
