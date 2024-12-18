@@ -9,7 +9,6 @@ import toml
 from PIL import Image
 import numpy as np
 import os
-import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 
@@ -20,12 +19,9 @@ FONT_PATH = os.path.join(os.getcwd(), "NanumGothic.ttf")
 if not os.path.exists(FONT_PATH):
     st.error("⚠️ 폰트 파일을 찾을 수 없습니다. 경로를 확인하세요.")
 else:
-    st.write("✅ 폰트 파일 확인됨:", FONT_PATH)
-
-# 폰트 속성 설정
-fm.fontManager.addfont(FONT_PATH)  # 폰트 파일을 직접 추가
-plt.rcParams['font.family'] = 'NanumGothic'  # 폰트 이름으로 설정
-plt.rcParams['axes.unicode_minus'] = False  # 마이너스 기호 깨짐 방지
+    fm.fontManager.addfont(FONT_PATH)
+    plt.rcParams['font.family'] = 'NanumGothic'
+    plt.rcParams['axes.unicode_minus'] = False
 
 # .toml 파일 읽기
 config = toml.load("secrets.toml")
@@ -63,6 +59,13 @@ if not df.empty:
         "Foreign Language Support": "foreign_language_support"
     }, inplace=True)
 
+# 외국어 정렬 함수
+def normalize_languages(value):
+    if isinstance(value, str):
+        languages = value.split(", ")
+        return ", ".join(sorted(languages))
+    return value
+
 # 페이지 나누기
 st.sidebar.title("😊 키오스크 커뮤니티 매핑")
 page = st.sidebar.selectbox("📑 탭 선택", ["📝 키오스크 데이터 입력", "📊 키오스크 데이터 분석"])
@@ -85,7 +88,7 @@ if page == "📝 키오스크 데이터 입력":
         이 프로젝트에서는 키오스크에 대한 정보를 수집하여 문제점을 분석합니다.
         """)
 
-    # 데이터 입력 섹션 (이모티콘 없음)
+    # 데이터 입력 섹션
     name = st.text_input("학번+이름 (예: 10000 홍길동):")
     categories = ["음식점", "공공기관", "상점", "기타"]
     selected_category = st.selectbox("분류를 선택하세요:", categories)
@@ -99,7 +102,7 @@ if page == "📝 키오스크 데이터 입력":
     if st.button("🚀 제출"):
         if selected_category and name and place_name and latitude and longitude:
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            foreign_language_support = ", ".join(selected_languages) if selected_languages else "없음"
+            foreign_language_support = normalize_languages(", ".join(selected_languages)) if selected_languages else "없음"
             sheet.append_row([timestamp, selected_category, latitude, longitude, place_name, kiosk_height, foreign_language_support, name])
             st.success("🎉 데이터가 성공적으로 저장되었습니다!")
         else:
@@ -142,6 +145,9 @@ elif page == "📊 키오스크 데이터 분석":
     """)
 
     if not df.empty:
+        # 외국어 정렬
+        df["foreign_language_support"] = df["foreign_language_support"].apply(normalize_languages)
+
         st.subheader("📋 전체 데이터 요약")
         total_data_count = len(df)
         st.write(f"🗂️ 총 데이터 개수: **{total_data_count}개**")
