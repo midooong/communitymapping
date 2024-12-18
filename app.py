@@ -8,8 +8,8 @@ from datetime import datetime
 import toml
 from PIL import Image
 import numpy as np
-import matplotlib.pyplot as plt
 import os
+import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 
