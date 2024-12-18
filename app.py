@@ -59,43 +59,46 @@ if not df.empty:
     }, inplace=True)
 
 # 페이지 나누기
-st.sidebar.title("키오스크 커뮤니티 매핑")
-page = st.sidebar.selectbox("탭 선택", ["키오스크 데이터 입력", "키오스크 데이터 분석"])
+st.sidebar.title("😊키오스크 커뮤니티 매핑😊")
+page = st.sidebar.selectbox("📑 탭 선택", ["📝 데이터 입력", "📊 데이터 분석"])
 
-if page == "키오스크 데이터 입력":
-    st.title("키오스크 데이터 수집하기")
+if page == "📝 데이터 입력":
+    st.title("🧾 키오스크 데이터 수집하기")
     image = Image.open("kiosk.jpg")
-    st.image(image.resize((500, 400)))
+    st.image(image.resize((500, 400)), caption="📷 키오스크 사진")
 
-    name = st.text_input("학번+이름 (예: 10000 홍길동):")
-    categories = ["음식점", "공공기관", "상점", "기타"]
-    selected_category = st.selectbox("분류를 선택하세요:", categories)
-    latitude = st.number_input("현재 위도(latitude):", value=37.4973, format="%.4f")
-    longitude = st.number_input("현재 경도(longitude):", value=126.9092, format="%.4f")
-    place_name = st.text_input("장소 이름:")
-    kiosk_height = st.number_input("키오스크 최대 높이(cm):", min_value=0)
-    language_options = ["영어", "일본어", "중국어", "스페인어", "기타"]
-    selected_languages = st.multiselect("외국어 지원 여부를 선택하세요:", language_options)
+    st.markdown("**🧭 함께 참여해서 커뮤니티 문제를 해결해봐요!**")
 
-    if st.button("제출"):
+    # 데이터 입력 폼
+    name = st.text_input("✍️ 학번+이름 (예: 10000 홍길동):")
+    categories = ["🍔 음식점", "🏛️ 공공기관", "🛍️ 상점", "✨ 기타"]
+    selected_category = st.selectbox("🏷️ 분류를 선택하세요:", categories)
+    latitude = st.number_input("📍 현재 위도(latitude):", value=37.4973, format="%.4f")
+    longitude = st.number_input("📍 현재 경도(longitude):", value=126.9092, format="%.4f")
+    place_name = st.text_input("🏢 장소 이름:")
+    kiosk_height = st.number_input("📏 키오스크 최대 높이(cm):", min_value=0)
+    language_options = ["🇬🇧 영어", "🇯🇵 일본어", "🇨🇳 중국어", "🇪🇸 스페인어", "🌐 기타"]
+    selected_languages = st.multiselect("💬 외국어 지원 여부를 선택하세요:", language_options)
+
+    if st.button("🚀 제출하기"):
         if selected_category and name and place_name and latitude and longitude:
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             foreign_language_support = ", ".join(selected_languages) if selected_languages else "없음"
             sheet.append_row([timestamp, selected_category, latitude, longitude, place_name, kiosk_height, foreign_language_support, name])
-            st.success("데이터가 성공적으로 저장되었습니다!")
+            st.success("🎉 데이터가 성공적으로 저장되었습니다!")
         else:
-            st.error("모든 필드를 입력해주세요.")
+            st.error("⚠️ 모든 필드를 입력해주세요.")
 
-elif page == "키오스크 데이터 분석":
-    st.title("키오스크 데이터 분석")
+elif page == "📊 데이터 분석":
+    st.title("📊 키오스크 데이터 분석")
     if not df.empty:
         df["kiosk_max_height"] = pd.to_numeric(df["kiosk_max_height"], errors="coerce")
         heights = df["kiosk_max_height"].dropna()
         bins = np.arange(120, 210, 10)
 
         # 키오스크 최대 높이 분포
-        with st.expander("📊 키오스크 최대 높이 분포"):
-            st.subheader("키오스크 최대 높이 분포")
+        with st.expander("📊 **키오스크 최대 높이 분포**"):
+            st.subheader("🔎 키오스크 최대 높이 분포")
             fig, ax = plt.subplots()
             counts, edges, patches = ax.hist(heights, bins=bins, color="skyblue", edgecolor="black")
             ax.set_title("키오스크 최대 높이 분포")
@@ -112,8 +115,8 @@ elif page == "키오스크 데이터 분석":
             st.table(height_summary)
 
         # 분류별 키오스크 수
-        with st.expander("📊 분류별 키오스크 수"):
-            st.subheader("분류별 키오스크 수")
+        with st.expander("📊 **분류별 키오스크 수**"):
+            st.subheader("🏷️ 분류별 키오스크 수")
             category_counts = df["category"].value_counts()
             fig, ax = plt.subplots()
             category_counts.plot(kind="bar", color=["red", "blue", "yellow", "green"], ax=ax)
@@ -125,8 +128,8 @@ elif page == "키오스크 데이터 분석":
             st.table(category_counts.reset_index().rename(columns={"index": "분류", "category": "개수"}))
 
         # 외국어 지원 여부
-        with st.expander("📊 외국어 지원 여부"):
-            st.subheader("외국어 지원 여부")
+        with st.expander("📊 **외국어 지원 여부**"):
+            st.subheader("💬 외국어 지원 여부")
             language_counts = df["foreign_language_support"].value_counts()
             fig, ax = plt.subplots()
             ax.pie(language_counts, labels=language_counts.index, autopct="%1.1f%%", startangle=90)
@@ -134,4 +137,4 @@ elif page == "키오스크 데이터 분석":
             st.pyplot(fig)
             st.table(language_counts.reset_index().rename(columns={"index": "외국어 지원", "foreign_language_support": "개수"}))
     else:
-        st.info("분석할 데이터가 없습니다.")
+        st.info("📭 분석할 데이터가 없습니다.")
