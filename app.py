@@ -105,7 +105,7 @@ if page == "📝 키오스크 데이터 입력":
         else:
             st.error("⚠️ 모든 필드를 입력해주세요.")
 
-    st.header("🗺️ 함께만든 키오스크지도")
+    st.header("🗺️ 함께 만든 키오스크 지도")
     if not df.empty:
         df['latitude'] = pd.to_numeric(df['latitude'], errors='coerce')
         df['longitude'] = pd.to_numeric(df['longitude'], errors='coerce')
