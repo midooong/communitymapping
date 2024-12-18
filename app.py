@@ -13,14 +13,15 @@ import os
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # 현재 스크립트 위치
-FONT_PATH = os.path.join(BASE_DIR, "NanumGothic.ttf")
+FONT_PATH = os.path.abspath("NanumGothic.ttf")  # 절대 경로로 설정
 fontprop = fm.FontProperties(fname=FONT_PATH)
 
-# matplotlib 폰트 설정
+# matplotlib에 폰트 적용
 plt.rc('font', family=fontprop.get_name())
-plt.rcParams["axes.unicode_minus"] = False  # 마이너스 기호 깨짐 방지
+plt.rcParams["axes.unicode_minus"] = False
 
+# 폰트 로드 확인
+print("로드된 폰트 이름:", fontprop.get_name())
 
 # .toml 파일 읽기
 config = toml.load("secrets.toml")
