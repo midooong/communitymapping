@@ -10,12 +10,16 @@ from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 
-plt.rcParams['font.family']="NanumGothic"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # 현재 스크립트 위치
+FONT_PATH = os.path.join(BASE_DIR, "fonts", "NanumGothic.ttf")
+fontprop = fm.FontProperties(fname=FONT_PATH)
 
-# 마이너스 기호 깨짐 방지
-plt.rcParams["axes.unicode_minus"] = False
+# matplotlib 폰트 설정
+plt.rc('font', family=fontprop.get_name())
+plt.rcParams["axes.unicode_minus"] = False  # 마이너스 기호 깨짐 방지
 
 
 # .toml 파일 읽기
@@ -124,10 +128,6 @@ if page == "키오스크 데이터 입력":
         st_folium(m, width=700, height=500)
 
 elif page == "키오스크 데이터 분석":
-    plt.rcParams['font.family']="NanumGothic"
-
-    # 마이너스 기호 깨짐 방지
-    plt.rcParams["axes.unicode_minus"] = False
     # 데이터 분석 페이지
     st.title("함께 수집한 키오스크 데이터 분석하기")
 
