@@ -13,6 +13,21 @@ import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 
+# 폰트 파일 경로 설정
+FONT_PATH = os.path.join(os.getcwd(), "NanumGothic.ttf")
+
+# 폰트 파일 존재 확인
+if not os.path.exists(FONT_PATH):
+    st.error("폰트 파일을 찾을 수 없습니다. 경로를 확인하세요.")
+else:
+    st.write("폰트 파일 확인됨:", FONT_PATH)
+
+# 폰트 속성 설정
+fm.fontManager.addfont(FONT_PATH)  # 폰트 파일을 직접 추가
+plt.rcParams['font.family'] = 'NanumGothic'  # 폰트 이름으로 설정
+plt.rcParams['axes.unicode_minus'] = False  # 마이너스 기호 깨짐 방지
+
+
 # .toml 파일 읽기
 config = toml.load("secrets.toml")
 SERVICE_ACCOUNT_INFO = {
