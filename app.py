@@ -13,12 +13,10 @@ import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 
-matplotlib.font_manager._rebuild()
-
-FONT_PATH = os.path.abspath("NanumGothic.ttf")  # 절대 경로로 설정
+# 폰트 파일 경로 설정
+FONT_PATH = os.path.abspath("NanumGothic.ttf")
 fontprop = fm.FontProperties(fname=FONT_PATH)
 
-# matplotlib에 폰트 적용
 plt.rc('font', family=fontprop.get_name())
 plt.rcParams["axes.unicode_minus"] = False
 
