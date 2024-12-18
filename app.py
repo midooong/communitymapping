@@ -193,3 +193,15 @@ elif page == "📊 키오스크 데이터 분석":
         st.table(language_counts.reset_index().rename(columns={"index": "외국어 지원", "foreign_language_support": "개수"}))
     else:
         st.info("📭 분석할 데이터가 없습니다.")
+
+    # 데이터프레임을 CSV로 변환 및 다운로드 버튼 추가
+    if not df.empty:
+        csv = df.to_csv(index=False, encoding="utf-8-sig")
+        st.download_button(
+            label="📥 CSV 파일 다운로드",
+            data=csv,
+            file_name="kiosk_data.csv",
+            mime="text/csv"
+        )
+    else:
+        st.info("📭 다운로드할 데이터가 없습니다.")
