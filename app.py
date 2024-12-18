@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 
 # 폰트 파일 경로 설정
-fpath=os.path.join(os.getcwd(). "NanumGothic.ttf")
+fpath=os.path.join(os.getcwd(), "NanumGothic.ttf")
 prop=fm.FontProperties(fname=fpath)
 
 # .toml 파일 읽기
