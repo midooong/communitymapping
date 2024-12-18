@@ -14,14 +14,10 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 
 # 폰트 파일 경로 설정
-FONT_PATH = os.path.abspath("NanumGothic.ttf")
-fontprop = fm.FontProperties(fname=FONT_PATH)
-
-plt.rc('font', family=fontprop.get_name())
-plt.rcParams["axes.unicode_minus"] = False
-
-# 폰트 로드 확인
-print("로드된 폰트 이름:", fontprop.get_name())
+font_path = './NanumGothic.ttf'  # 폰트 파일 경로
+fontprop = fm.FontProperties(fname=font_path, size=12)
+plt.rcParams['font.family'] = 'NanumGothic'
+plt.rcParams['axes.unicode_minus'] = False
 
 # .toml 파일 읽기
 config = toml.load("secrets.toml")
