@@ -86,38 +86,38 @@ if page == "📝 키오스크 데이터 입력":
         """)
 
     # JavaScript를 활용한 Geolocation API
-geolocation_script = """
-<script>
-function getLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const lat = position.coords.latitude;
-                const lon = position.coords.longitude;
-                document.getElementById("geo-data").innerHTML = `위도: ${lat}, 경도: ${lon}`;
-                document.getElementById("latitude").value = lat;
-                document.getElementById("longitude").value = lon;
-            },
-            (error) => {
-                console.error(error);
-                document.getElementById("geo-data").innerHTML = "위치를 확인할 수 없습니다.";
-            }
-        );
-    } else {
-        document.getElementById("geo-data").innerHTML = "이 브라우저는 Geolocation을 지원하지 않습니다.";
+    geolocation_script = """
+    <script>
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    document.getElementById("geo-data").innerHTML = `위도: ${lat}, 경도: ${lon}`;
+                    document.getElementById("latitude").value = lat;
+                    document.getElementById("longitude").value = lon;
+                },
+                (error) => {
+                    console.error(error);
+                    document.getElementById("geo-data").innerHTML = "위치를 확인할 수 없습니다.";
+                }
+            );
+        } else {
+            document.getElementById("geo-data").innerHTML = "이 브라우저는 Geolocation을 지원하지 않습니다.";
+        }
     }
-}
-</script>
-<div>
-    <button onclick="getLocation()">현재 위치 조회</button>
-    <p id="geo-data">위치를 확인하려면 버튼을 클릭하세요.</p>
-    <input type="hidden" id="latitude" />
-    <input type="hidden" id="longitude" />
-</div>
-"""
-
-# HTML 삽입
-st.markdown(geolocation_script, unsafe_allow_html=True)
+    </script>
+    <div>
+        <button onclick="getLocation()">현재 위치 조회</button>
+        <p id="geo-data">위치를 확인하려면 버튼을 클릭하세요.</p>
+        <input type="hidden" id="latitude" />
+        <input type="hidden" id="longitude" />
+    </div>
+    """
+    
+    # HTML 삽입
+    st.markdown(geolocation_script, unsafe_allow_html=True)
 
     # 데이터 입력 섹션 (이모티콘 없음)
     name = st.text_input("학번+이름 (예: 10000 홍길동):")
