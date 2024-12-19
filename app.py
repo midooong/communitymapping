@@ -96,7 +96,18 @@ if page == "📝 키오스크 데이터 입력":
         with col2:
             st.image(resized_image, use_container_width=False)
             st.caption("🖼️ 예시 : 시민들이 함께 만든 도시 시설물 관리 커뮤니티 맵.")
-
+            
+    with st.expander("구글 지도에서 위도, 경도를 가져오려면?"):
+        st.markdown("""
+        ### 구글 지도 앱에서 현재 위치의 위도, 경도 찾기
+        구글 지도 앱을 켜고, 현재 위치를 꾹! 눌러보세요!
+        """)
+        image = Image.open("map.jpg")
+        resized_image = image.resize((500, 400))
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            st.image(resized_image, use_container_width=False)
+    
     # 데이터 입력 섹션
     name = st.text_input("학번+이름 (예: 10000 홍길동):")
     categories = ["음식점", "공공기관", "상점", "기타"]
