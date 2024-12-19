@@ -47,7 +47,7 @@ gc = gspread.authorize(credentials)
 SPREADSHEET_URL = config["connections.gsheets"]["spreadsheet"]
 sheet = gc.open_by_url(SPREADSHEET_URL).sheet1
 
-# 실시간 데이터 가져오기 함수 추가
+# 실시간 데이터 가져오기 함수
 def load_data():
     """Google Sheets에서 데이터를 실시간으로 가져옵니다."""
     data = sheet.get_all_records()
