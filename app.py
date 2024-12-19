@@ -89,6 +89,12 @@ if page == "📝 키오스크 데이터 입력":
         커뮤니티 매핑(Community Mapping)은 집단지성을 기반으로 참여형 지도를 제작하는 것입니다.  
         이 프로젝트에서는 키오스크에 대한 정보를 수집하여 문제점을 분석합니다.
         """)
+        # 이미지 불러오기
+        image = Image.open("example.jpg")
+        resized_image = image.resize((500, 400))
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            st.image(resized_image, use_container_width=False)
 
     # 데이터 입력 섹션
     name = st.text_input("학번+이름 (예: 10000 홍길동):")
