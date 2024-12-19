@@ -109,6 +109,7 @@ if page == "📝 키오스크 데이터 입력":
             st.image(resized_image, use_container_width=False)
     
     # 데이터 입력 섹션
+    st.markdown("**👇 아래에서 데이터를 입력하세요!**")
     name = st.text_input("학번+이름 (예: 10000 홍길동):")
     categories = ["음식점", "공공기관", "상점", "기타"]
     selected_category = st.selectbox("분류를 선택하세요:", categories)
