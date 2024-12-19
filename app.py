@@ -95,6 +95,7 @@ if page == "📝 키오스크 데이터 입력":
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
             st.image(resized_image, use_container_width=False)
+            st.caption("🖼️ 예시 : 시민들이 함께 만든 도시 시설물 관리 커뮤니티 맵.")
 
     # 데이터 입력 섹션
     name = st.text_input("학번+이름 (예: 10000 홍길동):")
