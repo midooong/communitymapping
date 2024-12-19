@@ -126,6 +126,7 @@ if page == "📝 키오스크 데이터 입력":
             "상점": "yellow",
             "기타": "green"
         }
+    
         for _, row in df.iterrows():
             category = row.get("category", "기타")
             color = category_colors.get(category, "gray")
