@@ -129,6 +129,8 @@ if page == "📝 키오스크 데이터 입력":
         else:
             st.error("⚠️ 모든 필드를 입력해주세요.")
 
+    st.markdown("**👍 수집한 데이터는 왼쪽 위 탭을 변경해서 확인하세요!**")
+
     st.header("🗺️ 함께 만든 키오스크 지도")
     df = load_data()  # 실시간 데이터 로드
     if not df.empty:
