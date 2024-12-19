@@ -47,9 +47,9 @@ gc = gspread.authorize(credentials)
 SPREADSHEET_URL = config["connections.gsheets"]["spreadsheet"]
 sheet = gc.open_by_url(SPREADSHEET_URL).sheet1
 
-# 데이터 로드 함수
-@st.cache_data(ttl=60)
+# 실시간 데이터 가져오기 함수
 def load_data():
+    """Google Sheets에서 데이터를 실시간으로 가져옵니다."""
     data = sheet.get_all_records()
     df = pd.DataFrame(data)
     if not df.empty:
@@ -58,6 +58,7 @@ def load_data():
             "Place Name": "place_name",
             "Foreign Language Support": "foreign_language_support"
         }, inplace=True)
+        df['foreign_language_support'] = df['foreign_language_support'].apply(normalize_languages)
     return df
 
 # 외국어 정렬 함수
@@ -66,9 +67,6 @@ def normalize_languages(value):
         languages = value.split(", ")
         return ", ".join(sorted(languages))
     return value
-
-# 데이터 로드
-df = load_data()
 
 # 페이지 나누기
 st.sidebar.title("😊 키오스크 커뮤니티 매핑")
@@ -109,11 +107,11 @@ if page == "📝 키오스크 데이터 입력":
             foreign_language_support = normalize_languages(", ".join(selected_languages)) if selected_languages else "없음"
             sheet.append_row([timestamp, selected_category, latitude, longitude, place_name, kiosk_height, foreign_language_support, name])
             st.success("🎉 데이터가 성공적으로 저장되었습니다!")
-            st.experimental_rerun()  # 페이지 새로고침
         else:
             st.error("⚠️ 모든 필드를 입력해주세요.")
 
     st.header("🗺️ 함께 만든 키오스크 지도")
+    df = load_data()  # 실시간 데이터 로드
     if not df.empty:
         df['latitude'] = pd.to_numeric(df['latitude'], errors='coerce')
         df['longitude'] = pd.to_numeric(df['longitude'], errors='coerce')
@@ -127,10 +125,8 @@ if page == "📝 키오스크 데이터 입력":
             "기타": "green"
         }
         for _, row in df.iterrows():
-            category = row.get("category", "기타")
-            color = category_colors.get(category, "gray")
             popup_html = f"""
-            <b>분류:</b> {category}<br>
+            <b>분류:</b> {row['category']}<br>
             <b>장소:</b> {row['place_name']}<br>
             <b>최대 높이:</b> {row['kiosk_max_height']}cm<br>
             <b>외국어 지원:</b> {row['foreign_language_support']}<br>
@@ -139,7 +135,7 @@ if page == "📝 키오스크 데이터 입력":
             folium.Marker(
                 location=[row['latitude'], row['longitude']],
                 popup=folium.Popup(popup_html, max_width=300),
-                icon=folium.Icon(color=color)
+                icon=folium.Icon(color=category_colors.get(row['category'], "gray"))
             ).add_to(m)
         st_folium(m, width=700, height=500)
 
@@ -151,9 +147,8 @@ elif page == "📊 키오스크 데이터 분석":
     아래에서 수집된 데이터 요약 통계를 확인하세요.
     """)
 
+    df = load_data()  # 실시간 데이터 로드
     if not df.empty:
-        df["foreign_language_support"] = df["foreign_language_support"].apply(normalize_languages)
-
         st.subheader("📋 전체 데이터 요약")
         total_data_count = len(df)
         st.write(f"🗂️ 총 데이터 개수: **{total_data_count}개**")
@@ -198,9 +193,9 @@ elif page == "📊 키오스크 데이터 분석":
         st.pyplot(fig)
         st.table(language_counts.reset_index().rename(columns={"index": "외국어 지원", "foreign_language_support": "개수"}))
 
-        # CSV 다운로드 버튼 추가
+        # 데이터 다운로드 버튼
         st.subheader("📥 데이터 다운로드")
-        csv = df.to_csv(index=False, encoding="utf-8-sig")
+        csv = df.to_csv(index=False, encoding="utf-8-sig").encode("utf-8-sig")
         st.download_button(
             label="CSV 다운로드",
             data=csv,
