@@ -47,13 +47,9 @@ gc = gspread.authorize(credentials)
 SPREADSHEET_URL = config["connections.gsheets"]["spreadsheet"]
 sheet = gc.open_by_url(SPREADSHEET_URL).sheet1
 
-# Google Sheets에서 데이터 가져오기
-def get_data_from_sheets():
-    data = sheet.get_all_records()
-    return pd.DataFrame(data)
-
-# 데이터 가져오기 (최신 상태 유지)
-df = get_data_from_sheets()
+# 데이터 읽기
+data = sheet.get_all_records()
+df = pd.DataFrame(data)
 
 # 열 이름 변환
 if not df.empty:
@@ -109,7 +105,6 @@ if page == "📝 키오스크 데이터 입력":
             foreign_language_support = normalize_languages(", ".join(selected_languages)) if selected_languages else "없음"
             sheet.append_row([timestamp, selected_category, latitude, longitude, place_name, kiosk_height, foreign_language_support, name])
             st.success("🎉 데이터가 성공적으로 저장되었습니다!")
-            df = get_data_from_sheets()  # 데이터 새로고침
         else:
             st.error("⚠️ 모든 필드를 입력해주세요.")
 
