@@ -1,3 +1,52 @@
+import streamlit as st
+import gspread
+from google.oauth2.service_account import Credentials
+import pandas as pd
+from streamlit_folium import st_folium
+import folium
+from datetime import datetime
+import toml
+from PIL import Image
+import numpy as np
+import os
+import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
+
+# 폰트 파일 경로 설정
+FONT_PATH = os.path.join(os.getcwd(), "NanumGothic.ttf")
+
+# 폰트 파일 존재 확인
+if not os.path.exists(FONT_PATH):
+    st.error("⚠️ 폰트 파일을 찾을 수 없습니다. 경로를 확인하세요.")
+else:
+    fm.fontManager.addfont(FONT_PATH)
+    plt.rcParams['font.family'] = 'NanumGothic'
+    plt.rcParams['axes.unicode_minus'] = False
+
+# .toml 파일 읽기
+config = toml.load("secrets.toml")
+SERVICE_ACCOUNT_INFO = {
+    "type": config["connections.gsheets"]["type"],
+    "project_id": config["connections.gsheets"]["project_id"],
+    "private_key_id": config["connections.gsheets"]["private_key_id"],
+    "private_key": config["connections.gsheets"]["private_key"].replace("\\n", "\n"),
+    "client_email": config["connections.gsheets"]["client_email"],
+    "client_id": config["connections.gsheets"]["client_id"],
+    "auth_uri": config["connections.gsheets"]["auth_uri"],
+    "token_uri": config["connections.gsheets"]["token_uri"],
+    "auth_provider_x509_cert_url": config["connections.gsheets"]["auth_provider_x509_cert_url"],
+    "client_x509_cert_url": config["connections.gsheets"]["client_x509_cert_url"],
+}
+
+# Google Sheets API 인증
+SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+credentials = Credentials.from_service_account_info(SERVICE_ACCOUNT_INFO, scopes=SCOPE)
+gc = gspread.authorize(credentials)
+
+# Google Sheets 연결
+SPREADSHEET_URL = config["connections.gsheets"]["spreadsheet"]
+sheet = gc.open_by_url(SPREADSHEET_URL).sheet1
+
 # 실시간 데이터 가져오기 함수 추가
 def load_data():
     """Google Sheets에서 데이터를 실시간으로 가져옵니다."""
@@ -11,6 +60,13 @@ def load_data():
         }, inplace=True)
         df['foreign_language_support'] = df['foreign_language_support'].apply(normalize_languages)
     return df
+
+# 외국어 정렬 함수
+def normalize_languages(value):
+    if isinstance(value, str):
+        languages = value.split(", ")
+        return ", ".join(sorted(languages))
+    return value
 
 # 페이지 나누기
 st.sidebar.title("😊 키오스크 커뮤니티 매핑")
@@ -52,7 +108,7 @@ if page == "📝 키오스크 데이터 입력":
             sheet.append_row([timestamp, selected_category, latitude, longitude, place_name, kiosk_height, foreign_language_support, name])
             st.success("🎉 데이터가 성공적으로 저장되었습니다!")
         else:
-            st.error("⚠️ 모든 영역을 입력해주세요.")
+            st.error("⚠️ 모든 필드를 입력해주세요.")
 
     st.header("🗺️ 함께 만든 키오스크 지도")
     df = load_data()  # 실시간 데이터 로드
